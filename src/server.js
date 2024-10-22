@@ -52,7 +52,7 @@ app.post('/submit', (req, res) => {
 });
 
 // Inicia o servidor
-const port = 3000;
+const port = 3030;
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
