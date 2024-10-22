@@ -2,6 +2,7 @@ const PizZip = require('pizzip');
 const Docxtemplater = require('docxtemplater');
 const fs = require('fs');
 const path = require('path');
+// const toPdf = require('office-to-pdf');
 
 // Dada as informações o template é usado para gerar o output
 function generate_file(_template_path, _output_path, _header_info, _message){
@@ -36,6 +37,5 @@ function generate_file(_template_path, _output_path, _header_info, _message){
     fs.writeFileSync(path.resolve(__dirname, _output_path), buffer);
 }
 
-
-
-generate_file('../files/template.docx', '../files/output.docx', ['Christian Marques', '1º', 'Matemática', '21/10/2024'], 'Enunciado 1: Quanto é 14 * 7?')
+// Exporta a função
+module.exports = generate_file;
