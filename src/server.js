@@ -10,6 +10,7 @@ const generate_file = require('./app');
 var student_name = ""
 var class_name = ""
 var message = ""
+var theme = ""
 
 // Middleware para lidar com o corpo do POST
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -26,21 +27,20 @@ app.use(express.static('public'));
 app.post('/submit', (req, res) => {
     student_name = req.body.nome;
     class_name = req.body.disciplina;
+    theme = req.body.tema;
     message = req.body.enunciado;
 
     // Aqui você pode processar ou salvar os dados
-    console.log(`Nome: ${student_name}`);
-    console.log(`Disciplina: ${class_name}`);
-    console.log(`Enunciado: ${message}`);
+    // console.log(`Nome: ${student_name}`);
+    // console.log(`Disciplina: ${class_name}`);
+    // console.log(`Enunciado: ${message}`);
 
-    generate_file('../files/template.docx', '../files/output.docx', [student_name, '1º', class_name, '21/10/2024'], message);
+    generate_file('../files/template.docx', '../files/output.docx', [student_name, class_name, theme], message);
 
     // Envia uma resposta ao usuário
     // res.send(`<h1>Dados recebidos com sucesso!</h1><p>Nome do Aluno: ${student_name}</p><p>Disciplina: ${class_name}</p><p>Enunciado: ${message}</p>`);
 
     const filePath = path.resolve(__dirname, 'public', '../../files/output.docx');
-
-    console.log(filePath);
 
     // Enviar o arquivo para o cliente fazer o download
     res.download(filePath, 'output.docx', (err) => {
