@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, abort, url_for, send_file
 import os
 from .services import generate_file
+from .db import students, subjects
 
 word_bp = Blueprint('word', __name__)
 
@@ -41,3 +42,8 @@ def download_file(filename):
         return abort(404, description="Arquivo não encontrado")
 
     return send_file(file_path, as_attachment=True, download_name=filename)
+
+# Endpoint para retornar os dados de alunos e disciplinas
+@word_bp.route('/data', methods=['GET'])
+def get_data():
+    return jsonify({"students": students, "subjects": subjects})

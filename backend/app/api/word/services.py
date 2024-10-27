@@ -1,18 +1,8 @@
+import os
 from docx import Document
 from lxml import etree
 from datetime import datetime
-import os
-
-students_school_year = {
-    "Anderson Mello": 9,
-    "Andrey Mello": 7,
-    "João Miguel": 2,
-    "Kauê Pereira": 5,
-    "Manuela Ornellas": 6,
-    "Nicolly Pires": 6,
-    "Rodrigo Júnior Azevedo": 2,
-    "Wesley Ornellas": 8
-}
+from .db import students_school_year
 
 # Função para obter a data atual no formato aaaammdd
 def get_current_date():
