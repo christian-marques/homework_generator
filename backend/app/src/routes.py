@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, abort, url_for, send_file
 import os
-from .services import generate_file
+from .word import generate_file
 from .db import students, subjects
 
 word_bp = Blueprint('word', __name__)
@@ -14,19 +14,21 @@ def submit():
     message = request.form.get('enunciado')
 
     # Caminhos dos arquivos
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
     template_path = os.path.join(base_dir, 'files', 'template.docx')
     output_path = os.path.join(base_dir, 'files', 'output')
 
     # Gera o arquivo Word
-    output_filepath = generate_file(template_path, output_path, [student_name, class_name, theme], message)
+    output_filepath, download_name = generate_file(template_path, output_path, [student_name, class_name, theme], message)
+
+    print(f"Out: '{output_filepath}' | nome {download_name}")
 
     # Verifica se o arquivo foi gerado corretamente
     if not os.path.exists(output_filepath):
         return jsonify({"error": "Arquivo não encontrado"}), 404
 
     # Define o nome dinâmico do arquivo e gera uma URL para download
-    download_name = f'{student_name}_{class_name}_{theme}.docx'
+    # download_name = f'{student_name}_{class_name}_{theme}.docx'
     download_url = url_for('word.download_file', filename=download_name, _external=True)
 
     # Retorna o nome e a URL do arquivo como JSON
@@ -34,7 +36,7 @@ def submit():
 
 @word_bp.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
     file_path = os.path.join(base_dir, 'files', 'output', filename)
 
     # Verifica se o arquivo existe

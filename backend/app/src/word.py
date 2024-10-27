@@ -5,12 +5,12 @@ from datetime import datetime
 from .db import students_school_year
 
 # Função para obter a data atual no formato aaaammdd
-def get_current_date():
-    return datetime.now().strftime("%Y-%m-%d")
+def get_current_date(str_format):
+    return datetime.now().strftime(str_format)
 
 # Função para gerar o nome do arquivo baseado no conteúdo
 def generate_filename(student_name, class_name, theme):
-    current_date = get_current_date()
+    current_date = get_current_date("%Y-%m-%d")
     # Gera o nome do arquivo no formato aaaammdd_NomeAluno_Disciplina_Tema.docx
     filename = f"{current_date}_{student_name.replace(' ', '_')}_{class_name.replace(' ', '_')}_{theme.replace(' ', '_')}.docx"
     return filename
@@ -53,7 +53,7 @@ def generate_file(template_path, output_path, header_info, message):
     replace_placeholders_in_document(doc, '{year}', str(students_school_year.get(student_name)))
     replace_placeholders_in_document(doc, '{class}', class_name)
     replace_placeholders_in_document(doc, 'theme', theme.upper())
-    replace_placeholders_in_document(doc, '{date}', str(get_current_date()))
+    replace_placeholders_in_document(doc, '{date}', str(get_current_date("%d/%m/%Y")))
     
     # Para o enunciado, caso tenha múltiplas linhas
     replace_placeholders_in_document(doc, '{enunciado}', message)
@@ -62,6 +62,8 @@ def generate_file(template_path, output_path, header_info, message):
     filename = generate_filename(student_name, class_name, theme)
     output_filepath = os.path.join(output_path, filename)
 
+    print(f">>> output_filepath: {output_filepath}")
+
     # Salva o arquivo Word gerado
     doc.save(output_filepath)
-    return output_filepath
+    return output_filepath, filename

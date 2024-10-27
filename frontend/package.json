@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Frontend do meu projeto",
   "scripts": {
-    "start": "http-server . -p 8080"
+    "start": "http-server public -p 8080"
   },
   "author": "Christian Marques",
   "license": "ISC",
