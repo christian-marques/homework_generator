@@ -1,31 +1,36 @@
-// Captura o evento de submissão do formulário
 document.getElementById('form-exercicio').addEventListener('submit', function (event) {
-    event.preventDefault(); // Evita o envio padrão do formulário
+    event.preventDefault();
 
-    // Captura os dados do formulário
     const formData = new FormData(this);
-    
-    // Envia os dados para o backend
+
+    // Primeiro faz a requisição para gerar o arquivo e obter a URL de download
     fetch('http://localhost:5000/submit', {
         method: 'POST',
         body: formData
     })
-    .then(response => {
-        if (response.ok) {
-            return response.blob(); // Recebe o arquivo como blob
-        } else {
-            throw new Error('Erro ao gerar o documento.');
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
         }
-    })
-    .then(blob => {
-        // Cria uma URL temporária para baixar o arquivo gerado
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'arquivo_gerado.docx'; // Nome do arquivo para download
-        document.body.appendChild(a); // Anexa o link ao corpo
-        a.click(); // Simula o clique para baixar o arquivo
-        a.remove(); // Remove o link temporário
+
+        console.log(">>> '", data, "'")
+
+        // Extrai o nome e a URL do arquivo do JSON retornado
+        const { filename, url } = data;
+
+        // Realiza a segunda requisição para baixar o arquivo
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            });
     })
     .catch(error => {
         console.error('Erro:', error);
