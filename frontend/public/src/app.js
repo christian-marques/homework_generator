@@ -5,7 +5,7 @@ document.getElementById('form-exercicio').addEventListener('submit', function (e
     const formData = new FormData(this);
 
     // Primeiro faz a requisição para gerar o arquivo e obter a URL de download
-    fetch('http://localhost:5000/submit', {
+    fetch('https://homework-generator.onrender.com/submit', {
         method: 'POST',
         body: formData
     })
@@ -41,7 +41,7 @@ document.getElementById('form-exercicio').addEventListener('submit', function (e
 document.addEventListener('DOMContentLoaded', function () {
 
     // Faz a requisição para o backend para obter os dados
-    fetch('http://localhost:5000/data')
+    fetch('https://homework-generator.onrender.com/data')
         .then(response => {
             return response.json();
         })
