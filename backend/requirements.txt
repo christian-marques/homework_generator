@@ -1,2 +1,4 @@
 Flask==2.0.1
+Werkzeug==2.0.3
+Flask-CORS
 python-docx==0.8.11
