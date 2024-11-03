@@ -3,9 +3,11 @@ import os
 from .word import generate_file
 from .db import students, subjects
 
+URL_SERVER = 'https://homework-generator.onrender.com'
+
 word_bp = Blueprint('word', __name__)
 
-@word_bp.route('/submit', methods=['POST'])
+@word_bp.route(f'{URL_SERVER}/submit', methods=['POST'])
 def submit():
     # Obtém os dados do formulário
     student_name = request.form.get('nome')
@@ -34,7 +36,7 @@ def submit():
     # Retorna o nome e a URL do arquivo como JSON
     return jsonify({"filename": download_name, "url": download_url})
 
-@word_bp.route('/download/<filename>', methods=['GET'])
+@word_bp.route(f'{URL_SERVER}/download/<filename>', methods=['GET'])
 def download_file(filename):
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
     file_path = os.path.join(base_dir, 'files', 'output', filename)
@@ -46,6 +48,6 @@ def download_file(filename):
     return send_file(file_path, as_attachment=True, download_name=filename)
 
 # Endpoint para retornar os dados de alunos e disciplinas
-@word_bp.route('/data', methods=['GET'])
+@word_bp.route(f'{URL_SERVER}/data', methods=['GET'])
 def get_data():
     return jsonify({"students": students, "subjects": subjects})

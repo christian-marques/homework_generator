@@ -1,3 +1,5 @@
+const URL_SERVER = 'https://homework-generator.onrender.com';
+
 // Geração do arquivo em word
 document.getElementById('form-exercicio').addEventListener('submit', function (event) {
     event.preventDefault();
@@ -5,7 +7,7 @@ document.getElementById('form-exercicio').addEventListener('submit', function (e
     const formData = new FormData(this);
 
     // Primeiro faz a requisição para gerar o arquivo e obter a URL de download
-    fetch('https://homework-generator.onrender.com/submit', {
+    fetch(`${URL_SERVER}/submit`, {
         method: 'POST',
         body: formData
     })
@@ -41,7 +43,7 @@ document.getElementById('form-exercicio').addEventListener('submit', function (e
 document.addEventListener('DOMContentLoaded', function () {
 
     // Faz a requisição para o backend para obter os dados
-    fetch('https://homework-generator.onrender.com/data')
+    fetch(`${URL_SERVER}/data`)
         .then(response => {
             return response.json();
         })
