@@ -5,10 +5,10 @@ from .src.routes import word_bp
 def create_app():
     app = Flask(__name__)
 
-    # Habilitar o CORS para permitir o domínio do Vercel
-    CORS(app, resources={r"/*": {"origins": ["https://homework-generator-azure.vercel.app"]}})
+    # Permitir CORS para o domínio específico do Vercel
+    CORS(app, resources={r"/*": {"origins": ["https://homework-generator-azure.vercel.app"]}}, supports_credentials=True)
 
-    # Registra o blueprint para os endpoints de geração de Word
+    # Registra o blueprint para os endpoints
     app.register_blueprint(word_bp)
 
     return app
