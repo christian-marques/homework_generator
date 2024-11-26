@@ -13,10 +13,17 @@ def submit():
     theme = request.form.get('tema')
     message = request.form.get('enunciado')
 
+    ################################################################################
     # Caminhos dos arquivos
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    ################################################################################
+    # --> RENDER
+    base_dir = "/opt/render/project/src/backend"
+    # --> LOCAL
+    # base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
     template_path = os.path.join(base_dir, 'files', 'template.docx')
     output_path = os.path.join(base_dir, 'files', 'output')
+    ################################################################################
 
     # Gera o arquivo Word
     output_filepath, download_name = generate_file(template_path, output_path, [student_name, class_name, theme], message)
