@@ -17,7 +17,7 @@ def submit():
     # Caminhos dos arquivos
     ################################################################################
     # --> RENDER
-    base_dir = "/opt/render/project/src/backend"
+    base_dir = "/tmp"
     # --> LOCAL
     # base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
