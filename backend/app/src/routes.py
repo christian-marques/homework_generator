@@ -3,6 +3,8 @@ import os
 from .word import generate_file
 from .db import students, subjects
 
+TEMPLATE_FILE_NAME = 'template.docx'
+
 word_bp = Blueprint('word', __name__)
 
 @word_bp.route("/submit", methods=['POST'])
@@ -16,13 +18,13 @@ def submit():
     ################################################################################
     # Caminhos dos arquivos
     ################################################################################
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    template_path = os.path.join(base_dir, 'files', TEMPLATE_FILE_NAME)
     # --> RENDER
-    base_dir = "/tmp"
+    output_path = "/tmp"
     # --> LOCAL
-    # base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    # output_path = os.path.join(base_dir, 'files', 'output')
 
-    template_path = os.path.join(base_dir, 'files', 'template.docx')
-    output_path = os.path.join(base_dir, 'files', 'output')
     ################################################################################
 
     # Gera o arquivo Word
