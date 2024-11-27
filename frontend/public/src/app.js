@@ -4,39 +4,63 @@ const URL_SERVER = 'https://homework-generator.onrender.com';
 document.getElementById('form-exercicio').addEventListener('submit', function (event) {
     event.preventDefault();
 
+    console.log('Iniciando o envio do formulário para gerar o arquivo Word.');
+
     const formData = new FormData(this);
+
+    // Log dos dados enviados no formulário
+    console.log('Dados do formulário:', Array.from(formData.entries()));
 
     // Primeiro faz a requisição para gerar o arquivo e obter a URL de download
     fetch(`${URL_SERVER}/submit`, {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            throw new Error(data.error);
-        }
+        .then(response => {
+            console.log('Resposta recebida do backend para geração do arquivo:', response);
+            if (!response.ok) {
+                throw new Error(`Erro na geração do arquivo: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Dados retornados do backend:', data);
 
-        // Extrai o nome e a URL do arquivo do JSON retornado
-        const { filename, url } = data;
+            if (data.error) {
+                throw new Error(data.error);
+            }
 
-        // Realiza a segunda requisição para baixar o arquivo
-        fetch(url)
-            .then(response => response.blob())
-            .then(blob => {
-                const downloadUrl = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = downloadUrl;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
+            // Extrai o nome e a URL do arquivo do JSON retornado
+            const { filename, url } = data;
+            console.log(`Arquivo gerado com sucesso. Nome: ${filename}, URL para download: ${url}`);
+
+            // Realiza a segunda requisição para baixar o arquivo
+            return fetch(url).then(response => {
+                console.log('Resposta recebida do backend para download do arquivo:', response);
+                if (!response.ok) {
+                    throw new Error(`Erro no download do arquivo: ${response.statusText}`);
+                }
+                return response.blob();
             });
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Ocorreu um erro ao tentar gerar o documento.');
-    });
+        })
+        .then(blob => {
+            console.log('Blob do arquivo baixado:', blob);
+
+            // Cria uma URL temporária para o arquivo baixado
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            console.log('Arquivo baixado com sucesso.');
+        })
+        .catch(error => {
+            console.error('Erro no processo:', error);
+            alert('Ocorreu um erro ao tentar gerar o documento.');
+        });
 });
 
 // Preenchimento dos campos de lista suspensa com a requisição no BD

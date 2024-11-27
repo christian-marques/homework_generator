@@ -11,6 +11,10 @@ logger = logging.getLogger(__name__)
 
 word_bp = Blueprint('word', __name__)
 
+@word_bp.route("/", methods=['GET'])
+def home():
+    return jsonify({"message": "Trabalhando nisso..."})
+
 @word_bp.route("/submit", methods=['POST'])
 def submit():
     logger.info("Recebendo dados do formulário...")
