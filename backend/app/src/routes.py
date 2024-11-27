@@ -62,10 +62,11 @@ def submit():
 @word_bp.route("/download/<filename>", methods=['GET'])
 def download_file(filename):
     # LOCAL
-    # base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-    # file_path = os.path.join(base_dir, 'files', 'output', filename)
+    # base_dir = os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')), 'files', 'output')
     # RENDER
-    file_path = '/tmp'
+    base_dir = '/tmp'
+
+    file_path = os.path.join(base_dir, filename)
 
     # Verifica se o arquivo existe
     if not os.path.exists(file_path):
