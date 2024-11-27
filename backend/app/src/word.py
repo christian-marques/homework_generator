@@ -1,8 +1,12 @@
 import os
+import logging
 from docx import Document
 from lxml import etree
 from datetime import datetime
 from .db import students_school_year
+
+# Obtém um logger para este módulo
+logger = logging.getLogger(__name__)
 
 # Função para obter a data atual no formato aaaammdd
 def get_current_date(str_format):
@@ -62,8 +66,11 @@ def generate_file(template_path, output_path, header_info, message):
     filename = generate_filename(student_name, class_name, theme)
     output_filepath = os.path.join(output_path, filename)
 
-    print(f">>> output_filepath: {output_filepath}")
+    logger.info(f"Arquivo gerado em: {output_filepath}")
 
     # Salva o arquivo Word gerado
     doc.save(output_filepath)
+
+    logger.info("Arquivos no /tmp:", os.listdir("/tmp"))
+    
     return output_filepath, filename

@@ -1,5 +1,12 @@
 import os
+import logging
 from app import create_app
+
+# Configuração global do logger
+logging.basicConfig(
+    level=logging.DEBUG,  # Nível de log desejado (DEBUG, INFO, WARNING, ERROR)
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",  # Formato
+)
 
 app = create_app()
 
