@@ -1,42 +1,38 @@
 const URL_SERVER = 'https://homework-generator.onrender.com';
 
+// Função para garantir que as URLs estão corretas
+const fixUrl = (url) => url.replace(/^http:/, 'https:');
+
 // Geração do arquivo em word
 document.getElementById('form-exercicio').addEventListener('submit', function (event) {
     event.preventDefault();
 
-    console.log('Iniciando o envio do formulário para gerar o arquivo Word.');
+    console.log('Iniciando o envio do formulário.');
 
     const formData = new FormData(this);
 
-    // Log dos dados enviados no formulário
-    console.log('Dados do formulário:', Array.from(formData.entries()));
-
     // Primeiro faz a requisição para gerar o arquivo e obter a URL de download
-    fetch(`${URL_SERVER}/submit`, {
+    fetch(fixUrl(`${URL_SERVER}/submit`), {
         method: 'POST',
         body: formData
     })
         .then(response => {
-            console.log('Resposta recebida do backend para geração do arquivo:', response);
+            console.log('Resposta recebida do backend:', response);
             if (!response.ok) {
                 throw new Error(`Erro na geração do arquivo: ${response.statusText}`);
             }
             return response.json();
         })
         .then(data => {
-            console.log('Dados retornados do backend:', data);
+            console.log('Dados recebidos do backend:', data);
 
             if (data.error) {
                 throw new Error(data.error);
             }
 
-            // Extrai o nome e a URL do arquivo do JSON retornado
-            const { filename, url } = data;
-            console.log(`Arquivo gerado com sucesso. Nome: ${filename}, URL para download: ${url}`);
-
             // Realiza a segunda requisição para baixar o arquivo
-            return fetch(url).then(response => {
-                console.log('Resposta recebida do backend para download do arquivo:', response);
+            return fetch(fixUrl(data.url)).then(response => {
+                console.log('Resposta do backend para download:', response);
                 if (!response.ok) {
                     throw new Error(`Erro no download do arquivo: ${response.statusText}`);
                 }
@@ -50,7 +46,7 @@ document.getElementById('form-exercicio').addEventListener('submit', function (e
             const downloadUrl = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = downloadUrl;
-            a.download = filename;
+            a.download = 'arquivo_gerado.docx'; // Nome do arquivo para download
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -58,10 +54,11 @@ document.getElementById('form-exercicio').addEventListener('submit', function (e
             console.log('Arquivo baixado com sucesso.');
         })
         .catch(error => {
-            console.error('Erro no processo:', error);
+            console.error('Erro:', error);
             alert('Ocorreu um erro ao tentar gerar o documento.');
         });
 });
+
 
 // Preenchimento dos campos de lista suspensa com a requisição no BD
 document.addEventListener('DOMContentLoaded', function () {
