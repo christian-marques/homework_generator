@@ -3,7 +3,7 @@ const URL_SERVER = 'https://homework-generator.onrender.com';
 // Função para garantir que as URLs estão corretas
 const fixUrl = (url) => url.replace(/^http:/, 'https:');
 
-// Geração do arquivo em word
+// Geração do arquivo em Word
 document.getElementById('form-exercicio').addEventListener('submit', function (event) {
     event.preventDefault();
 
@@ -30,23 +30,26 @@ document.getElementById('form-exercicio').addEventListener('submit', function (e
                 throw new Error(data.error);
             }
 
+            const { filename, url } = data; // Extrai o nome do arquivo e a URL para download
+
             // Realiza a segunda requisição para baixar o arquivo
-            return fetch(fixUrl(data.url)).then(response => {
+            return fetch(fixUrl(url)).then(response => {
                 console.log('Resposta do backend para download:', response);
                 if (!response.ok) {
                     throw new Error(`Erro no download do arquivo: ${response.statusText}`);
                 }
-                return response.blob();
+                return response.blob().then(blob => ({ blob, filename })); // Retorna o blob e o nome do arquivo
             });
         })
-        .then(blob => {
+        .then(({ blob, filename }) => {
             console.log('Blob do arquivo baixado:', blob);
+            console.log('Nome do arquivo para download:', filename);
 
             // Cria uma URL temporária para o arquivo baixado
             const downloadUrl = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = downloadUrl;
-            a.download = 'arquivo_gerado.docx'; // Nome do arquivo para download
+            a.download = filename; // Usa o nome recebido do backend
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -58,7 +61,6 @@ document.getElementById('form-exercicio').addEventListener('submit', function (e
             alert('Ocorreu um erro ao tentar gerar o documento.');
         });
 });
-
 
 // Preenchimento dos campos de lista suspensa com a requisição no BD
 document.addEventListener('DOMContentLoaded', function () {
